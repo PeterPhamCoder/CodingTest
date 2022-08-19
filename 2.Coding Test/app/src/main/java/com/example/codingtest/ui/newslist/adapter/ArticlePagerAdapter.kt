@@ -3,11 +3,13 @@ package com.example.codingtest.ui.newslist.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import androidx.navigation.fragment.FragmentNavigator
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.example.codingtest.R
 import com.example.codingtest.data.model.Article
 import com.example.codingtest.databinding.WidgetArticleItemBinding
 import com.example.codingtest.extentions.displayDateTime
@@ -17,6 +19,7 @@ class ArticlePagerAdapter(private val onItemClick: (Article, FragmentNavigator.E
     PagingDataAdapter<Article, ArticlePagerAdapter.ArticleViewHolder>(ArticleComparator) {
 
     override fun onBindViewHolder(holder: ArticleViewHolder, position: Int) {
+
         getItem(position)?.let { article ->
             holder.bind(article, onItemClick)
         }
@@ -37,7 +40,8 @@ class ArticlePagerAdapter(private val onItemClick: (Article, FragmentNavigator.E
         private lateinit var pairImage: Pair<View, String>
 
         fun bind(article: Article, onItemClick: (Article, FragmentNavigator.Extras) -> Unit) {
-
+            binding.cardView.animation =
+                AnimationUtils.loadAnimation(binding.root.context, R.anim.list_animator)
             binding.apply {
                 imageNews.apply {
                     loadImage(article.urlToImage)
