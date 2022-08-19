@@ -6,18 +6,17 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.codingtest.data.model.Article
 import com.example.codingtest.databinding.FragmentNewsDetailBinding
 import com.example.codingtest.extentions.displayDateTime
 import com.example.codingtest.extentions.loadImage
+import com.google.android.material.transition.MaterialContainerTransform
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.concurrent.TimeUnit
 
 @AndroidEntryPoint
 class NewsDetailFragment : Fragment() {
-
-    private val viewModel: NewsDetailViewModel by viewModels()
 
     private lateinit var binding: FragmentNewsDetailBinding
 
@@ -36,6 +35,12 @@ class NewsDetailFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initData()
         initView()
+        initTransition()
+    }
+
+    private fun initTransition() {
+        sharedElementEnterTransition = MaterialContainerTransform()
+        postponeEnterTransition(250, TimeUnit.MILLISECONDS)
     }
 
     private fun initData() {
@@ -47,12 +52,25 @@ class NewsDetailFragment : Fragment() {
         setupArticleView()
     }
 
+
     private fun setupArticleView() {
         binding.apply {
-            imageNews.loadImage(article.urlToImage)
-            textTitle.text = article.title
-            textContent.text = article.description
-            textUpdatedTime.text = article.publishedAt?.displayDateTime()
+            imageNews.apply {
+                loadImage(article.urlToImage)
+                transitionName = article.urlToImage
+            }
+            textTitle.apply {
+                text = article.title
+                transitionName = article.title
+            }
+            textContent.apply {
+                text = article.description
+                transitionName = article.description
+            }
+            textUpdatedTime.apply {
+                text = article.publishedAt?.displayDateTime()
+                transitionName = article.publishedAt?.displayDateTime()
+            }
         }
     }
 
